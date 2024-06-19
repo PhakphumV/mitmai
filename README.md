@@ -15,7 +15,10 @@ A LINE Chatbot to check if an URL is legit or phising.
   - [ ]  Public list companies
   - [ ]  Goverment agencies and associations
   - [ ]  Local/International/Global brands
-- [ ] **Discovery** Write URL investigation methodology
+- [ ] **Planning** Write URL investigation methodology
+- [ ] **Planning** Choose a suitable technology stack and infrastructure
+- [ ] **Planning** Write a roadmap, planned features
+- [ ] **Planning** Write a contribution guide
 - [ ] **Branding** Logo ใหม่?
 - [ ] **Branding** จดชื่อ LINE Premium ID ชื่อ "mitmai" : ค่าใช้จ่าย  ฿444 ต่อปี
 - [ ] **Branding** อัพเกรด LINE Account Monthly plan จาก ฟรี (ได้ 500 ข้อความต่อเดือน) เป็น เบสิค (ได้ 15000 ข้อความต่อเดือน) : ค่าใช้จ่าย ฿1280 ต่อ เดือน
