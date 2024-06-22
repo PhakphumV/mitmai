@@ -15,6 +15,8 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
+    PushMessageRequest,
+    PushMessageResponse,
     ShowLoadingAnimationRequest
 )
 from linebot.v3.webhooks import (
@@ -80,11 +82,20 @@ def handle_message(event):
             )
 
             response_message = virustotal_scan_url(user_message)
-            line_bot_api.push_message_with_http_info(
-                event.source.user_id,
+            
+
+            line_bot_api.push_message(
+                getSourceIdBaseOnSourceType(event.source),
                 TextMessage(text=response_message)
             )
 
+def getSourceIdBaseOnSourceType(event_source):
+    if(event_source.type=="user"):
+        return event_source.userId
+    elif(event_source.type=="group"):
+        return event_source.groupId
+    elif(event_source.type=="room"):
+        return event_source.roomId
 
 def virustotal_scan_url(url):
     client = vt.Client(VIRUSTOTAL_API_KEY)
