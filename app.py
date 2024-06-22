@@ -96,7 +96,14 @@ def virustotal_scan_url(url):
     #     'url': url,
     # }
     analysis = client.scan_url(url)
-    return f"{analysis}"
+    if(analysis.status=="completed"):
+        if(analysis.stats.malicious>0):
+            return f"The url {url} is unsafe. It has been flagged as malicious by VirusTotal."
+        else:
+            return f"The url {url} appears to be safe."
+    else:
+        return f"We are checking the URL and will come back to you with the result"
+    
 
     # response = requests.get(VT_API_URL, headers=headers, params=params)
     # if response.status_code == 200:
