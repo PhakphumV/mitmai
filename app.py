@@ -14,11 +14,9 @@ from linebot.v3.messaging import (
     ApiClient,
     MessagingApi,
     ReplyMessageRequest,
-    TextMessage,
-    PushMessageRequest,
-    PushMessageResponse,
-    ShowLoadingAnimationRequest
+    TextMessage
 )
+
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent
