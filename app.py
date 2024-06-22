@@ -89,7 +89,7 @@ def handle_message(event):
 def virustotal_scan_url(url):
     client = vt.Client(VIRUSTOTAL_API_KEY)
     analysis = client.scan_url(url)
-    analysis = client.get_object("/analyses/{}",analysis)
+    
     while True:
         analysis_report = client.get_object("/analyses/{}",analysis.id)
         if analysis_report.status=="completed" :
