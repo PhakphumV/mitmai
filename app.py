@@ -1,5 +1,6 @@
 import os
-import requests
+import time
+# import requests
 import vt
 from flask import Flask, request, abort
 from linebot.v3 import (
@@ -68,14 +69,14 @@ def handle_message(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        # line_bot_api.reply_message_with_http_info(
-        #     ReplyMessageRequest(
-        #         reply_token=event.reply_token,
-        #         messages=[TextMessage(text=event.message.text)]
-        #     )
-        # )
         user_message = event.message.text
         if user_message.startswith("http://") or user_message.startswith("https://"):
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=f"Checking the URL : {user_message}")]
+                )
+            )
             response_message = virustotal_scan_url(user_message)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
@@ -86,29 +87,19 @@ def handle_message(event):
 
 
 def virustotal_scan_url(url):
-    # client = vt.Client(VIRUSTOTAL_API_KEY)
-    # analysis = client.scan_url(url)
+    client = vt.Client(VIRUSTOTAL_API_KEY)
+    analysis = client.scan_url(url)
+    analysis = client.get_object("/analyses/{}",analysis)
+    while True:
+        analysis_report = client.get_object("/analyses/{}",analysis.id)
+        if analysis_report.status=="completed" :
+            break;
+        time.sleep(10)
 
-    VT_API_SCAN_URL = 'https://www.virustotal.com/api/v3/urls'
-    headers = {
-        'x-apikey': VIRUSTOTAL_API_KEY,
-    }
-
-    params = {
-        'url': url,
-    }
-
-    response = requests.get(VT_API_SCAN_URL, headers=headers, params=params)
-    if response.status_code == 200:
-        return f"{response.text}"
-        # result = response.json()
-        # if result['data']['attributes']['stats']['malicious'] > 0:
-            
-        # else:
-        #     return f"The URL {url} appears to be safe."
+    if analysis_report.stats['malicious']>0 :
+        return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
     else:
-        return f"Failed to check URL safety. Status code: {response.status_code}"
-
+        return f"The URL {url} appears to be safe."
 
 if __name__ == "__main__":
     app.run(debug=True)
