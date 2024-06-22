@@ -86,34 +86,27 @@ def handle_message(event):
 
 
 def virustotal_scan_url(url):
-    client = vt.Client(VIRUSTOTAL_API_KEY)
-    # VT_API_URL = 'https://www.virustotal.com/api/v3/urls'
-    # headers = {
-    #     'x-apikey': VIRUSTOTAL_API_KEY,
-    # }
+    # client = vt.Client(VIRUSTOTAL_API_KEY)
+    # analysis = client.scan_url(url)
 
-    # params = {
-    #     'url': url,
-    # }
-    analysis = client.scan_url(url)
-    if(analysis.status=="completed"):
-        if(analysis.stats.malicious>0):
-            return f"The url {url} is unsafe. It has been flagged as malicious by VirusTotal."
+    VT_API_URL = 'https://www.virustotal.com/api/v3/urls'
+    headers = {
+        'x-apikey': VIRUSTOTAL_API_KEY,
+    }
+
+    params = {
+        'url': url,
+    }
+
+    response = requests.get(VT_API_URL, headers=headers, params=params)
+    if response.status_code == 200:
+        result = response.json()
+        if result['data']['attributes']['stats']['malicious'] > 0:
+            return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
         else:
-            return f"The url {url} appears to be safe."
+            return f"The URL {url} appears to be safe."
     else:
-        return f"We are checking the URL and will come back to you with the result"
-    
-
-    # response = requests.get(VT_API_URL, headers=headers, params=params)
-    # if response.status_code == 200:
-    #     result = response.json()
-    #     if result['data']['attributes']['stats']['malicious'] > 0:
-    #         return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
-    #     else:
-    #         return f"The URL {url} appears to be safe."
-    # else:
-    #     return f"Failed to check URL safety. Status code: {response.status_code}"
+        return f"Failed to check URL safety. Status code: {response.status_code}"
 
 
 if __name__ == "__main__":
