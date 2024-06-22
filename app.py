@@ -71,12 +71,12 @@ def handle_message(event):
 
         user_message = event.message.text
         if user_message.startswith("http://") or user_message.startswith("https://"):
-            line_bot_api.reply_message_with_http_info(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=f"Checking the URL : {user_message}")]
-                )
-            )
+            # line_bot_api.reply_message_with_http_info(
+            #     ReplyMessageRequest(
+            #         reply_token=event.reply_token,
+            #         messages=[TextMessage(text=f"Checking the URL : {user_message}")]
+            #     )
+            # )
             response_message = virustotal_scan_url(user_message)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
