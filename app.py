@@ -1,5 +1,6 @@
 import os
 import requests
+import vt
 from flask import Flask, request, abort
 from linebot.v3 import (
     WebhookHandler
@@ -85,24 +86,27 @@ def handle_message(event):
 
 
 def virustotal_scan_url(url):
-    VT_API_URL = 'https://www.virustotal.com/api/v3/urls'
-    headers = {
-        'x-apikey': VIRUSTOTAL_API_KEY,
-    }
+    client = vt.Client(VIRUSTOTAL_API_KEY)
+    # VT_API_URL = 'https://www.virustotal.com/api/v3/urls'
+    # headers = {
+    #     'x-apikey': VIRUSTOTAL_API_KEY,
+    # }
 
-    params = {
-        'url': url,
-    }
+    # params = {
+    #     'url': url,
+    # }
+    analysis = client.scan_url(url)
+    return f"{analysis}"
 
-    response = requests.get(VT_API_URL, headers=headers, params=params)
-    if response.status_code == 200:
-        result = response.json()
-        if result['data']['attributes']['stats']['malicious'] > 0:
-            return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
-        else:
-            return f"The URL {url} appears to be safe."
-    else:
-        return f"Failed to check URL safety. Status code: {response.status_code}"
+    # response = requests.get(VT_API_URL, headers=headers, params=params)
+    # if response.status_code == 200:
+    #     result = response.json()
+    #     if result['data']['attributes']['stats']['malicious'] > 0:
+    #         return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
+    #     else:
+    #         return f"The URL {url} appears to be safe."
+    # else:
+    #     return f"Failed to check URL safety. Status code: {response.status_code}"
 
 
 if __name__ == "__main__":
