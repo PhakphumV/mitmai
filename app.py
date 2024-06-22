@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 # import requests
 import vt
 from flask import Flask, request, abort
@@ -14,7 +15,8 @@ from linebot.v3.messaging import (
     ApiClient,
     MessagingApi,
     ReplyMessageRequest,
-    TextMessage
+    TextMessage,
+    PushMessageRequest
 )
 
 from linebot.v3.webhooks import (
@@ -75,41 +77,46 @@ def handle_message(event):
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text=f"Checking the URL : {user_message}")]
+                    messages=[TextMessage(
+                        text=f"Checking the URL : {user_message}")]
                 )
             )
 
             response_message = virustotal_scan_url(user_message)
-            
-
+            source = getSourceIdBaseOnSourceType(event.source)
+            retry_key = uuid.uuid4()
             line_bot_api.push_message(
-                getSourceIdBaseOnSourceType(event.source),
-                TextMessage(text=response_message)
-            )
+                push_message_request=PushMessageRequest(
+                    to=source,
+                    messages=TextMessage(text=response_message)
+                ),
+                x_line_retry_key=retry_key)
+
 
 def getSourceIdBaseOnSourceType(event_source):
-    if(event_source.type=="user"):
+    if (event_source.type == "user"):
         return event_source.user_id
-    elif(event_source.type=="group"):
+    elif (event_source.type == "group"):
         return event_source.group_id
-    elif(event_source.type=="room"):
+    elif (event_source.type == "room"):
         return event_source.room_id
+
 
 def virustotal_scan_url(url):
     client = vt.Client(VIRUSTOTAL_API_KEY)
     analysis = client.scan_url(url)
-    
+
     while True:
-        analysis_report = client.get_object("/analyses/{}",analysis.id)
-        if analysis_report.status=="completed" :
-            break;
+        analysis_report = client.get_object("/analyses/{}", analysis.id)
+        if analysis_report.status == "completed":
+            break
         time.sleep(10)
 
-    if analysis_report.stats['malicious']>0 :
+    if analysis_report.stats['malicious'] > 0:
         return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
     else:
         return f"The URL {url} appears to be safe."
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-
