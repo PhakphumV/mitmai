@@ -89,11 +89,11 @@ def handle_message(event):
 
 def getSourceIdBaseOnSourceType(event_source):
     if(event_source.type=="user"):
-        return event_source.userId
+        return event_source.user_id
     elif(event_source.type=="group"):
-        return event_source.groupId
+        return event_source.group_id
     elif(event_source.type=="room"):
-        return event_source.roomId
+        return event_source.room_id
 
 def virustotal_scan_url(url):
     client = vt.Client(VIRUSTOTAL_API_KEY)
