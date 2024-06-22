@@ -37,5 +37,7 @@ Once you create a channel, you can't move the channel to another provider later.
 - https://developers.line.biz/en/docs/messaging-api/overview/#send-messages-at-any-time
 - https://developers.line.biz/en/docs/messaging-api/getting-started/#step-four-create-channel
 - https://github.com/line/line-bot-sdk-python
+- https://developers.line.biz/en/reference/messaging-api/
+- https://developers.line.biz/en/docs/messaging-api/use-loading-indicator/
 
 

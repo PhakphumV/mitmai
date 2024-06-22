@@ -14,7 +14,8 @@ from linebot.v3.messaging import (
     ApiClient,
     MessagingApi,
     ReplyMessageRequest,
-    TextMessage
+    TextMessage,
+    ShowLoadingAnimationRequest
 )
 from linebot.v3.webhooks import (
     MessageEvent,
@@ -71,18 +72,17 @@ def handle_message(event):
 
         user_message = event.message.text
         if user_message.startswith("http://") or user_message.startswith("https://"):
-            # line_bot_api.reply_message_with_http_info(
-            #     ReplyMessageRequest(
-            #         reply_token=event.reply_token,
-            #         messages=[TextMessage(text=f"Checking the URL : {user_message}")]
-            #     )
-            # )
-            response_message = virustotal_scan_url(user_message)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text=response_message)]
+                    messages=[TextMessage(text=f"Checking the URL : {user_message}")]
                 )
+            )
+
+            response_message = virustotal_scan_url(user_message)
+            line_bot_api.push_message_with_http_info(
+                event.source.user_id,
+                TextMessage(text=response_message)
             )
 
 
