@@ -2,6 +2,7 @@ import os
 import time
 import re
 import uuid
+import logging
 # import requests
 import vt
 from flask import Flask, request, abort
@@ -26,6 +27,10 @@ from linebot.v3.webhooks import (
 )
 
 app = Flask(__name__)
+
+# Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # LINE Bot credentials
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET')
@@ -82,15 +87,15 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[
-                        TextMessage(text=f'Checking the URLs:\n {urls_list}')
+                        TextMessage(text=f'กำลังตรวจสอบ:\n {urls_list}')
                     ]
                 )
             )
+            source = get_source_id_base_on_source_type(event.source)
 
             for url in urls:
 
                 response_message = virustotal_scan_url(url)
-                source = get_source_id_base_on_source_type(event.source)
                 line_bot_api.push_message(
                     PushMessageRequest(
                         to=source,
@@ -99,8 +104,14 @@ def handle_message(event):
 
 
 def extract_urls(text):
-    url_regex = r'(https?://\S+)'
-    urls = re.findall(url_regex, text)
+    url_regex = re.compile(
+        r'((https?://)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/[\w-./?%&=]*)?)'
+    )
+    urls = url_regex.findall(text)
+    # Extract the full match from each tuple returned by findall
+    urls = [match[0] for match in urls]
+    
+    logger.info(f"Extracted URLs and domain names: {urls}")
     return urls
 
 
@@ -123,10 +134,11 @@ def virustotal_scan_url(url):
             break
         time.sleep(10)
 
+
     if analysis_report.stats['malicious'] > 0:
-        return f'The URL {url} is unsafe. It has been flagged as malicious by VirusTotal.'
+        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีไวรัส'
     else:
-        return f'The URL {url} appears to be safe.'
+        return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย'
 
 
 if __name__ == '__main__':
