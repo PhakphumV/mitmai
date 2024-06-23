@@ -77,12 +77,12 @@ def handle_message(event):
         urls = extract_urls(message_text)
 
         if urls:
-
+            urls_list = '\n\r'.join(urls)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[
-                        TextMessage(text=f"Checking the URLs:\n {"\n".join(urls)}")
+                        TextMessage(text=f'Checking the URLs:\n {urls_list}')
                     ]
                 )
             )
@@ -105,11 +105,11 @@ def extract_urls(text):
 
 
 def get_source_id_base_on_source_type(event_source):
-    if (event_source.type == "user"):
+    if (event_source.type == 'user'):
         return event_source.user_id
-    elif (event_source.type == "group"):
+    elif (event_source.type == 'group'):
         return event_source.group_id
-    elif (event_source.type == "room"):
+    elif (event_source.type == 'room'):
         return event_source.room_id
 
 
@@ -118,16 +118,16 @@ def virustotal_scan_url(url):
     analysis = client.scan_url(url)
 
     while True:
-        analysis_report = client.get_object("/analyses/{}", analysis.id)
-        if analysis_report.status == "completed":
+        analysis_report = client.get_object('/analyses/{}', analysis.id)
+        if analysis_report.status == 'completed':
             break
         time.sleep(10)
 
     if analysis_report.stats['malicious'] > 0:
-        return f"The URL {url} is unsafe. It has been flagged as malicious by VirusTotal."
+        return f'The URL {url} is unsafe. It has been flagged as malicious by VirusTotal.'
     else:
-        return f"The URL {url} appears to be safe."
+        return f'The URL {url} appears to be safe.'
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
