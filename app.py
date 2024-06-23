@@ -82,7 +82,7 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[
-                        TextMessage(text=f"Checking the URLs : {"\n".join(urls)}")
+                        TextMessage(text=f"Checking the URLs:\n {"\n".join(urls)}")
                     ]
                 )
             )
