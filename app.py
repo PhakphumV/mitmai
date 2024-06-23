@@ -123,7 +123,7 @@ def handle_message(event):
 
 def extract_urls(text):
     url_regex = re.compile(
-        r'((https?://)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/[\w-./?%&=]*)?)'
+        r'((https?://)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/[^\s]*)?)'
     )
     urls = url_regex.findall(text)
     # Extract the full match from each tuple returned by findall
@@ -143,6 +143,7 @@ def get_source_id_base_on_source_type(event_source):
 
 
 def virustotal_scan_url(url):
+    logger.info(f'Analyzing URL: {url}')
     client = vt.Client(VIRUSTOTAL_API_KEY)
     analysis = client.scan_url(url)
 
@@ -152,11 +153,23 @@ def virustotal_scan_url(url):
             break
         time.sleep(10)
 
+    for engine_name in analysis_report.results:
+        data = analysis_report.results[engine_name]
+        engine_result = data['result']
+        logger.info(f'=== Detailed results ===')
+        logger.info(f'{engine_name}: {engine_result}')
+        logger.info(f'========================')
+    
+    for stat in analysis_report.stats:
+        data = analysis_report.stats[stat]
+        logger.info(f'=== Statistic ===')
+        logger.info(f'{stat}: {data}')
+        logger.info(f'=================')
 
     if analysis_report.stats['malicious'] > 0:
-        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีโปรแกรมประสงค์ร้ายแฝงอยู่ในลิงค์คะ'
-    if analysis_report.stats['suspicious'] > 0:
-        return f'ลิ้งค์นี้ {url} น่าสงสัยคะ ควรระมัดระวังนะคะ '
+        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีโปรแกรมประสงค์ร้ายแฝงอยู่ในลิงค์ค่ะ'
+    if analysis_report.stats['suspicious'] > 5:
+        return f'ลิ้งค์นี้ {url} น่าสงสัยค่ะ ควรระมัดระวังนะคะ '
     else:
         return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย แต่เช็คให้ชัวร์ก่อนนะคะ'
 
