@@ -103,21 +103,21 @@ def handle_message(event):
             for url in urls:
 
                 response_message = virustotal_scan_url(url)
-                flex_bubble = FlexBubble(
-                    direction='ltr',
-                    body=FlexBox(
-                        layout='vertical',
-                        contents=[
-                            FlexText(text=url),
-                            FlexText(text=response_message)
-                        ]
-                    )
-                )
+                # flex_bubble = FlexBubble(
+                #     direction='ltr',
+                #     body=FlexBox(
+                #         layout='vertical',
+                #         contents=[
+                #             FlexText(text=url),
+                #             FlexText(text=response_message)
+                #         ]
+                #     )
+                # )
 
                 line_bot_api.push_message(
                     PushMessageRequest(
                         to=source,
-                        messages=[FlexMessage(altText=response_message,contents=flex_bubble)]
+                        messages=[TextMessage(text=f'กำลังตรวจสอบ:\n {response_message}')]
                     ))
 
 
