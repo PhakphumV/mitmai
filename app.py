@@ -1,9 +1,7 @@
 import os
 import time
 import re
-import uuid
 import logging
-# import requests
 import vt
 from flask import Flask, request, abort
 from linebot.v3 import (
@@ -18,7 +16,16 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
-    PushMessageRequest
+    PushMessageRequest,
+    FlexMessage,
+    FlexBubble,
+    # FlexImage,
+    FlexBox,
+    FlexText,
+    # FlexIcon,
+    # FlexButton,
+    # FlexSeparator,
+    # FlexContainer,
 )
 
 from linebot.v3.webhooks import (
@@ -96,10 +103,21 @@ def handle_message(event):
             for url in urls:
 
                 response_message = virustotal_scan_url(url)
+                flex_bubble = FlexBubble(
+                    direction='ltr',
+                    body=FlexBox(
+                        layout='vertical',
+                        contents=[
+                            FlexText(text=url),
+                            FlexText(text=response_message)
+                        ]
+                    )
+                )
+
                 line_bot_api.push_message(
                     PushMessageRequest(
                         to=source,
-                        messages=[TextMessage(text=response_message)]
+                        messages=[FlexMessage(altText=response_message,contents=flex_bubble)]
                     ))
 
 
@@ -136,9 +154,11 @@ def virustotal_scan_url(url):
 
 
     if analysis_report.stats['malicious'] > 0:
-        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีไวรัส'
+        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีโปรแกรมประสงค์ร้ายแฝงอยู่ในลิงค์คะ'
+    if analysis_report.stats['suspicious'] > 0:
+        return f'ลิ้งค์นี้ {url} น่าสงสัยคะ ควรระมัดระวังนะคะ '
     else:
-        return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย'
+        return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย แต่เช็คให้ชัวร์ก่อนนะคะ'
 
 
 if __name__ == '__main__':
