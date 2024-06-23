@@ -75,16 +75,20 @@ def handle_message(event):
         line_bot_api = MessagingApi(api_client)
 
         urls = extract_urls(message_text)
+
         if urls:
-            for url in urls:
-                line_bot_api.reply_message_with_http_info(
-                    ReplyMessageRequest(
-                        reply_token=event.reply_token,
-                        messages=[
-                            TextMessage(text=f"Checking the URL : {url}")
-                        ]
-                    )
+
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        TextMessage(text=f"Checking the URLs : {"\n".join(urls)}")
+                    ]
                 )
+            )
+
+            for url in urls:
+
                 response_message = virustotal_scan_url(url)
                 source = get_source_id_base_on_source_type(event.source)
                 line_bot_api.push_message(
@@ -93,10 +97,12 @@ def handle_message(event):
                         messages=[TextMessage(text=response_message)]
                     ))
 
+
 def extract_urls(text):
     url_regex = r'(https?://\S+)'
     urls = re.findall(url_regex, text)
     return urls
+
 
 def get_source_id_base_on_source_type(event_source):
     if (event_source.type == "user"):
