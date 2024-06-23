@@ -117,7 +117,8 @@ def handle_message(event):
                 line_bot_api.push_message(
                     PushMessageRequest(
                         to=source,
-                        messages=[TextMessage(text=f'กำลังตรวจสอบ:\n {response_message}')]
+                        messages=[TextMessage(
+                            text=response_message)]
                     ))
 
 
@@ -128,7 +129,7 @@ def extract_urls(text):
     urls = url_regex.findall(text)
     # Extract the full match from each tuple returned by findall
     urls = [match[0] for match in urls]
-    
+
     logger.info(f"Extracted URLs and domain names: {urls}")
     return urls
 
@@ -159,7 +160,7 @@ def virustotal_scan_url(url):
         logger.info(f'=== Detailed results ===')
         logger.info(f'{engine_name}: {engine_result}')
         logger.info(f'========================')
-    
+
     for stat in analysis_report.stats:
         data = analysis_report.stats[stat]
         logger.info(f'=== Statistic ===')
