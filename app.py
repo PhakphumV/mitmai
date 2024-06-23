@@ -78,19 +78,20 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[TextMessage(
-                        text=f"Checking the URL : {user_message}")]
+                        text=f"Checking the URL : {user_message}"),
+                        TextMessage(text=virustotal_scan_url(user_message))]
                 )
             )
 
-            response_message = virustotal_scan_url(user_message)
-            source = getSourceIdBaseOnSourceType(event.source)
-            retry_key = uuid.uuid4()
-            line_bot_api.push_message(
-                push_message_request=PushMessageRequest(
-                    to=source,
-                    messages=TextMessage(text=response_message)
-                ),
-                x_line_retry_key=retry_key)
+            # response_message = virustotal_scan_url(user_message)
+            # source = getSourceIdBaseOnSourceType(event.source)
+            # retry_key = uuid.uuid4()
+            # line_bot_api.push_message(
+            #     push_message_request=PushMessageRequest(
+            #         to=source,
+            #         messages=TextMessage(text=response_message)
+            #     ),
+            #     x_line_retry_key=retry_key)
 
 
 def getSourceIdBaseOnSourceType(event_source):
