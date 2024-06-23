@@ -1,5 +1,6 @@
 import os
 import time
+import re
 import uuid
 # import requests
 import vt
@@ -69,32 +70,35 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
+    message_text = event.message.text
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        user_message = event.message.text
-        if user_message.startswith("http://") or user_message.startswith("https://"):
-            line_bot_api.reply_message_with_http_info(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[
-                        TextMessage(text=f"Checking the URL : {user_message}")
-                    ]
+        urls = extract_urls(message_text)
+        if urls:
+            for url in urls:
+                line_bot_api.reply_message_with_http_info(
+                    ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=[
+                            TextMessage(text=f"Checking the URL : {url}")
+                        ]
+                    )
                 )
-            )
+                response_message = virustotal_scan_url(url)
+                source = get_source_id_base_on_source_type(event.source)
+                line_bot_api.push_message(
+                    PushMessageRequest(
+                        to=source,
+                        messages=[TextMessage(text=response_message)]
+                    ))
 
-            response_message = virustotal_scan_url(user_message)
-            source = getSourceIdBaseOnSourceType(event.source)
-            retry_key = uuid.uuid4()
-            line_bot_api.push_message(
-                PushMessageRequest(
-                    to=source,
-                    messages=[TextMessage(text=response_message)]
-                ),
-                x_line_retry_key=retry_key)
+def extract_urls(text):
+    url_regex = r'(https?://\S+)'
+    urls = re.findall(url_regex, text)
+    return urls
 
-
-def getSourceIdBaseOnSourceType(event_source):
+def get_source_id_base_on_source_type(event_source):
     if (event_source.type == "user"):
         return event_source.user_id
     elif (event_source.type == "group"):
