@@ -94,7 +94,7 @@ def handle_message(event):
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
                     messages=[
-                        TextMessage(text=f'กำลังตรวจสอบ:\n {urls_list}')
+                        TextMessage(text=f'กำลังตรวจสอบ:\n\r{urls_list}')
                     ]
                 )
             )
