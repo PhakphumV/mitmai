@@ -168,11 +168,11 @@ def virustotal_scan_url(url):
         logger.info(f'=================')
 
     if analysis_report.stats['malicious'] > 0:
-        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีโปรแกรมประสงค์ร้ายแฝงอยู่ในลิงค์ค่ะ'
+        return f'ลิ้งค์นี้ {url} ไม่ปลอดภัย พบว่ามีโปรแกรมประสงค์ร้ายแฝงอยู่ในลิ้งค์ค่ะ'
     if analysis_report.stats['suspicious'] > 5:
         return f'ลิ้งค์นี้ {url} น่าสงสัยค่ะ ควรระมัดระวังนะคะ '
     else:
-        return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย แต่เช็คให้ชัวร์ก่อนนะคะ'
+        return f'ลิ้งค์นี้ {url} ดูเหมือนจะปลอดภัย\n\rแต่แนะนำตรวจสอบให้มั่นใจก่อนนะคะ'
 
 
 if __name__ == '__main__':
