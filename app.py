@@ -83,11 +83,22 @@ def callback():
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     message_text = event.message.text
+
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        urls = extract_urls(message_text)
+        if(message_text=="ตื่นๆ"):
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[
+                        TextMessage(text=f'ตื่นแล้วเมี้ยว')
+                    ]
+                )
+            )
+            return
 
+        urls = extract_urls(message_text)
         if urls:
             urls_list = '\n\r'.join(urls)
             line_bot_api.reply_message_with_http_info(
