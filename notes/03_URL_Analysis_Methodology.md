@@ -4,7 +4,10 @@
 
 Only for legitimate domain names such as
 - Thai government websites
-- 
+- Thai Public listed corporates
+- Global brands
+- Known private companies
+- Known associations & communities
 
 ## Domain Fuzzing
 
