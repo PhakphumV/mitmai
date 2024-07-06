@@ -21,5 +21,6 @@ A LINE Chatbot to check if an URL is legit or phising.
 - [ ] **Planning** Write a contribution guide
 - [ ] **Branding** Logo ใหม่? ไม่ใช้ stock logo ที่ใช้อยู่
 - [ ] **Branding** จดชื่อ LINE Premium ID ชื่อ "mitmai" : ค่าใช้จ่าย  ฿444 ต่อปี
+- [ ] **Branding** ยื่นขออัพบัญชีทางการแบบรองรับ (โล่น้ำเงิน) ค่าดำเนินการ 888 บาทตลอดอายุการใช้งาน
 - [ ] **Branding** อัพเกรด LINE Account Monthly plan จาก ฟรี (ได้ 500 ข้อความต่อเดือน) เป็น เบสิค (ได้ 15000 ข้อความต่อเดือน) : ค่าใช้จ่าย ฿1280 ต่อ เดือน
 - [ ] **Branding** อัพเกรด LINE Account Monthly plan จาก เบสิค (ได้ 15000 ข้อความต่อเดือน) เป็น โปร (ได้ 35000 ข้อความต่อเดือน และส่วนเกิน ฿0.04 ต่อข้อความ) : ค่าใช้จ่าย ฿1500 ต่อ เดือน
