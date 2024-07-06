@@ -10,13 +10,13 @@ A LINE Chatbot to check if an URL is legit or phising.
 
 จดเพื่อเตือนความจำว่าต้องทำอะไรต่อไป
 
-- [/] **Discovery** Study LINE Message API
-- [/] **Discovery** Gather known legitimate URLs such as
+- [x] **Discovery** Study LINE Message API
+- [x] **Discovery** Gather known legitimate URLs such as
   - [ ]  Public list companies
   - [ ]  Goverment agencies and associations
   - [ ]  Local/International/Global brands
 - [ ] **Planning** Write URL investigation methodology
-- [/] **Planning** Choose a suitable technology stack and infrastructure
+- [x] **Planning** Choose a suitable technology stack and infrastructure
 - [ ] **Planning** Write a roadmap, planned features
 - [ ] **Planning** Write a contribution guide
 - [ ] **Branding** Logo ใหม่? ไม่ใช้ stock logo ที่ใช้อยู่
