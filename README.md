@@ -24,3 +24,5 @@ A LINE Chatbot to check if an URL is legit or phising.
 - [ ] **Branding** ยื่นขออัพบัญชีทางการแบบรองรับ (โล่น้ำเงิน) ค่าดำเนินการ 888 บาทตลอดอายุการใช้งาน
 - [ ] **Branding** อัพเกรด LINE Account Monthly plan จาก ฟรี (ได้ 500 ข้อความต่อเดือน) เป็น เบสิค (ได้ 15000 ข้อความต่อเดือน) : ค่าใช้จ่าย ฿1280 ต่อ เดือน
 - [ ] **Branding** อัพเกรด LINE Account Monthly plan จาก เบสิค (ได้ 15000 ข้อความต่อเดือน) เป็น โปร (ได้ 35000 ข้อความต่อเดือน และส่วนเกิน ฿0.04 ต่อข้อความ) : ค่าใช้จ่าย ฿1500 ต่อ เดือน
+- [ ] **Development** Add CI/CD workflow to automate testing & deployment
+- [ ] **Development** Add QA (SonarCloud) to analyze source code and improve maintainability and security
